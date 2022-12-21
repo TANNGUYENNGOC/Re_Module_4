@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.6.1.js"
+            integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="col-xl-6" style="background-color: #0d6056;padding-top: 10px">
+    <form class="d-flex" role="search" action="/thueTro/showList" method="get">
+        <div class="col-7 d-flex">
+            <input style="height: 80%" class="form-control me-2" type="search" placeholder="ID"
+                   aria-label="Search" name="id" th:value="${id}">
+            <input style="height: 80%" class="form-control me-2" type="search" placeholder="Tên"
+                   aria-label="Search" name="tenNguoiThueTro" th:value="${tenNguoiThueTro}">
+            <input style="height: 80%" class="form-control me-2" type="search" placeholder="Sdt"
+                   aria-label="Search" name="soDienThoai" th:value="${soDienThoai}">
+        </div>
+
+        <button class="btn btn-outline-success" type="submit"
+                style="background-color: #5c636a;height: 80%;border: 2px solid yellow;color: white">Search
+        </button>
+    </form>
+
+</div>
+<h1>Quản lí phòng trọ</h1>
+<a href="/thueTro/showFormCreate">Thêm mới thường</a>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        data-bs-whatever="@mdo">Thêm mới bằng modal
+</button>
+<p style="color: red" th:text="${mess}"></p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Mã phòng trọ</th>
+        <th scope="col">Tên người thuê trọ</th>
+        <th scope="col">Số điện thoại</th>
+        <th scope="col">Ngày bắt đầu thuê</th>
+        <th scope="col">Hình thức thanh toán</th>
+        <th colspan="2" scope="col">Sửa</th>
+        <th colspan="2" scope="col">Xóa</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="thueTro:${listThueTro}">
+        <tr>
+            <td th:text="*{thueTro.getId()}"></td>
+            <td th:text="*{thueTro.getTenNguoiThueTro()}"></td>
+            <td th:text="*{thueTro.getSoDienThoai()}"></td>
+            <td th:text="*{thueTro.getNgayBatDauThue()}"></td>
+            <td th:text="*{thueTro.getHinhThucThanhToan()}"></td>
+            <td>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#edit"
+                            th:attr="onclick=|update('${thueTro.getId()}','${thueTro.getTenNguoiThueTro()}','${thueTro.getSoDienThoai()}','${thueTro.getNgayBatDauThue()}','${thueTro.getHinhThucThanhToan()}')|">
+                    Edit
+                </button>
+            </td>
+            <td><a th:href="@{/thueTro/update/{id}(id=${thueTro.getId()})}">Sửa thường</a></td>
+            <td><a th:href="@{/thueTro/remove/{id}(id=${thueTro.getId()})}">Xóa thường</a></td>
+            <td>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#removeThueTro"
+                        th:attr="onclick=|remove('${thueTro.getId()}','${thueTro.getTenNguoiThueTro()}');|">
+                    Xóa bằng modal
+                </button>
+            </td>
+            <td></td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+
+</body>
+<!--modal xóa-->
+<div class="modal fade" id="removeThueTro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Xóa ??</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/thueTro/removeThueTro" method="post">
+                <div class="modal-body">
+                    <p id="idRemove"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Xóa</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script>
+    function update(id, name, phoneNumber, date, hhtt) {
+        document.getElementById("updateId").value = id;
+        document.getElementById("updateName").value = name;
+        document.getElementById("updatePhoneNumber").value = phoneNumber;
+        document.getElementById("updateDate").value = date;
+        document.getElementById("updateHttt").value = hhtt;
+    }
+    function remove(id, name) {
+        alert(name)
+        alert(id)
+        document.getElementById("idRemove").value = id;
+        document.getElementById("nameRemove").value = name;
+    }
+</script>
+<!--modal update-->
+<div class="modal fade" id="edit" tabindex="-1" data-bs-backdrop="static" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-danger">
+                <h1 class="modal-title fs-5"><b>Chỉnh sửa thuê trọ</b></h1>
+            </div>
+            <form action="/thueTro/updateThueTro" method="post" th:object="${thueTroDto}" class="mb-1">
+                <div class="modal-body text-success" style="background-color: rgba(132,151,241,0)">
+                    <div class="mb-1" hidden>
+                        <input type="text" id="updateId" th:field="*{id}">
+                    </div>
+                    <div class="mb-1">
+                        <label th:for="updateName" class="form-label"><b>Tên người thuê trọ</b></label>
+                        <input type="text" id="updateName" required class="form-control" th:field="*{tenNguoiThueTro}"
+                               style="background-color: rgba(132,151,241,0.2)">
+                    </div>
+                    <div class="mb-1">
+                        <label th:for="updatePhoneNumber" class="form-label"><b>Số điện thoại</b></label>
+                        <input type="text" id="updatePhoneNumber" required class="form-control"
+                               th:field="*{soDienThoai}"
+                               style="background-color: rgba(132,151,241,0.2)">
+
+                    </div>
+                    <div class="mb-1">
+                        <label th:for="updateDate" class="form-label"><b>Ngày bắt đầu thuê</b></label>
+                        <input type="date" id="updateDate" required class="form-control" th:field="*{ngayBatDauThue}"
+                               style="background-color: rgba(132,151,241,0.2)">
+                    </div>
+
+                    <div class="mb-1">
+                        <label for="updateHttt"><b>Hình thức thanh toán</b> </label>
+                        <select required id="updateHttt" class="form-select"
+                                aria-label="Default select example"
+                                th:field="*{hinhThucThanhToan}" style="border-radius: 30px">
+                            <option style="background-color: rgba(132,151,241,0.2)"
+                                    th:each=" httt: ${listHinhThucThanhToan}"
+                                    th:value="${httt.id}"
+                                    th:text="${httt.tenHinhThucThanhToan}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-outline-danger"><b>Edit thuê trọ</b></button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal"><b>Close</b></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</html>
