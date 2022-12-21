@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="col-xl-5" style="background-color: #0d6056;padding-top: 10px">
+    <form class="d-flex" role="search" action="/blog" method="get">
+        <div class="col-6 d-flex">
+            <input style="height: 80%" class="form-control me-2" type="search" placeholder="Tên tac gia"
+                   th:value="${author}" aria-label="Search" name="author">
+        </div>
+        <div class="col-4">
+            <select class="form-select" name="categoryID">
+                <option th:value="-1">Facility Type</option>
+                <option th:each="category : ${categoryList}"
+                        th:value="${category.id}" th:selected="${categoryID==category.id}"
+                        th:text="${category.nameCategory}"></option>
+            </select>
+        </div>
+
+        <button class="btn btn-outline-success" type="submit"
+                style="background-color: #5c636a;height: 80%;border: 2px solid yellow;color: white">Search
+        </button>
+    </form>
+</div>
+</div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        data-bs-whatever="@mdo">Them moi
+</button>
+<p th:text="${mess}"></p>
+<table class="table table-striped">
+    <tr>
+        <th scope="col">Trạng thái</th>
+        <th scope="col">Nội dung</th>
+        <th scope="col">Tác giả</th>
+        <th scope="col">Ngày viết</th>
+        <th scope="col">Tên thể loại</th>
+        <th scope="col">Chỉnh sửa</th>
+        <th scope="col">Xóa</th>
+    </tr>
+    <th:block th:each="blog : ${blogList}">
+        <tr>
+            <td th:text="${blog.title}"></td>
+            <td th:text="${blog.content}"></td>
+            <td th:text="${blog.author}"></td>
+            <td th:text="${blog.dateOfWriting}"></td>
+            <td th:text="${blog.category.nameCategory}"></td>
+
+            <td><a class="btn btn-primary" th:href="@{/blog/{id}/update(id=${blog.id})}">Chỉnh sửa</a></td>
+            <td>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#remove"
+                        data-bs-whatever="@getbootstrap"
+                        th:attr="onclick=|remove('${blog.id}','${blog.content}')|">Xóa
+                </button>
+            </td>
+        </tr>
+    </th:block>
+</table>
+<a class="btn btn-success" th:href="@{/blog/(page=${blogList.number - 1},name=${name},facilityType=${facilityType})}"
+   th:if="${blogList.hasPrevious()}">Previous</a>
+<span th:text="${blogList.number+1}+'/'+${blogList.totalPages}"></span>
+<a class="btn btn-success" th:href="@{/blog/(page=${blogList.number + 1},name=${name},facilityType=${facilityType})}"
+   th:if="${blogList.hasNext()}">Next</a>
+</body>
+<script>
+    function remove(id,content){
+        alert(id)
+        alert(content)
+        document.getElementById("idRemove").value = id;
+        document.getElementById("contentRemove").innerHTML = content;
+    }
+</script>
+<!--modal them moi-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form th:object="${blog}" method="post" action="/blog/createBlog">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Trạng thái</label>
+                        <input type="text" class="form-control" id="recipient-name" th:field="*{title}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name1" class="col-form-label">Nội dung</label>
+                        <input type="text" class="form-control" id="recipient-name1" th:field="*{content}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name2" class="col-form-label">Tác giả</label>
+                        <input type="text" class="form-control" id="recipient-name2" th:field="*{author}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name3" class="col-form-label">Ngày viết</label>
+                        <input type="date" class="form-control" id="recipient-name3" th:field="*{dateOfWriting}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Thể loại</label>
+                        <select th:field="*{category}" class="form-select form-select-lg mb-3"
+                                aria-label=".form-select-lg example">
+                            <option th:each="category:${categoryList}"
+                                    th:text="${category.nameCategory}" th:value="${category.id}">
+                            </option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--modal xóa-->
+<div class="modal fade" id="remove" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="blog/removeBlog">
+
+                    <input hidden type="text" class="form-control" id="idRemove" name="idRemove" >
+                    <p>Bạn có muốn xóa nội dung <span style="color: red" id="contentRemove"> không ??</span></p>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Remove</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+</html>
