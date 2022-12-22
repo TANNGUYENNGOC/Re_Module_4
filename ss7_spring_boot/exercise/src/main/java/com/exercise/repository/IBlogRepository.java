@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface IBlogRepository extends JpaRepository<Blog,Long> {
 //    List<Blog> findByAuthorContainingOrCategory_Id(String author, int category);
-    Page<Blog> findByAuthorContainingAndCategory(Pageable pageable, String author, Category category);
-    Page<Blog> findByAuthorContaining(Pageable pageable,String author);
+    Page<Blog> findByAuthorContainingAndCategoryOrderByDateOfWritingAsc(Pageable pageable, String author, Category category);
+    Page<Blog> findByAuthorContainingOrderByDateOfWritingAsc(Pageable pageable,String author);
 }

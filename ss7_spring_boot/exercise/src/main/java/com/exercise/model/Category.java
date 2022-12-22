@@ -11,6 +11,7 @@ public class Category {
     private Long id;
     @Column(name = "name_category",columnDefinition = "NVARCHAR(255)")
     public String nameCategory;
+
     @OneToMany(mappedBy = "category")
     private Set<Blog> blogs;
 
@@ -21,6 +22,7 @@ public class Category {
 
     public Category() {
     }
+
 
     public Category(String nameCategory) {
         this.nameCategory = nameCategory;

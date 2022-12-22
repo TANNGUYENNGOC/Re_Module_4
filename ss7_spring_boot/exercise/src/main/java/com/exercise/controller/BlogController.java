@@ -25,9 +25,9 @@ public class BlogController {
     public String display(@RequestParam(defaultValue = "") String author, @RequestParam(defaultValue = "-1") Long categoryID, Model model,@PageableDefault(page = 0,size = 4) Pageable  pageable){
         if (categoryID!=-1){
             Category category=categoryService.findById(categoryID).get();
-            model.addAttribute("blogList", blogService.findByAuthorContainingAndCategory(pageable,author,category));
+            model.addAttribute("blogList", blogService.findByAuthorContainingAndCategoryOrderByDateOfWritingAsc(pageable,author,category));
         }else {
-            model.addAttribute("blogList", blogService.findByAuthorContaining(pageable,author));
+            model.addAttribute("blogList", blogService.findByAuthorContainingOrderByDateOfWritingAsc(pageable,author));
         }
         model.addAttribute("author",author);
         model.addAttribute("categoryID",categoryID);

@@ -37,12 +37,12 @@ public class BlogService implements IBlogService {
 
 
     @Override
-    public Page<Blog> findByAuthorContainingAndCategory(Pageable pageable, String author, Category category) {
-        return blogRepository.findByAuthorContainingAndCategory(pageable,author,category);
+    public Page<Blog> findByAuthorContainingAndCategoryOrderByDateOfWritingAsc(Pageable pageable, String author, Category category) {
+        return blogRepository.findByAuthorContainingAndCategoryOrderByDateOfWritingAsc(pageable,author,category);
     }
 
     @Override
-    public Page<Blog> findByAuthorContaining(Pageable pageable, String author) {
-        return blogRepository.findByAuthorContaining(pageable, author);
+    public Page<Blog> findByAuthorContainingOrderByDateOfWritingAsc(Pageable pageable, String author) {
+        return blogRepository.findByAuthorContainingOrderByDateOfWritingAsc(pageable,author);
     }
 }

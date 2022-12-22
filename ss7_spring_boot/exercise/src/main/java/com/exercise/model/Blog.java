@@ -18,11 +18,23 @@ public class Blog {
     @Column(columnDefinition = "NVARCHAR(255)")
     private String author;
 
-    @Column(columnDefinition = "DATETIME")
+    @Column(columnDefinition = "DATE")
     private String dateOfWriting;
 
     @ManyToOne
     private Category category;
+
+    private boolean flag;
+
+    public Blog(Long id, String title, String content, String author, String dateOfWriting, Category category, boolean flag) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.dateOfWriting = dateOfWriting;
+        this.category = category;
+        this.flag = flag;
+    }
 
     public Blog(Long id, String title, String content, String author, String dateOfWriting, Category category) {
         this.id = id;
@@ -90,5 +102,13 @@ public class Blog {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public boolean isFlag() {
+        return flag;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
     }
 }

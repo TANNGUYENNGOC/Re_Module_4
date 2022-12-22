@@ -19,7 +19,7 @@
         </div>
         <div class="col-4">
             <select class="form-select" name="categoryID">
-                <option th:value="-1">Facility Type</option>
+                <option th:value="-1">Category</option>
                 <option th:each="category : ${categoryList}"
                         th:value="${category.id}" th:selected="${categoryID==category.id}"
                         th:text="${category.nameCategory}"></option>
@@ -32,10 +32,14 @@
     </form>
 </div>
 </div>
+<span>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
         data-bs-whatever="@mdo">Them moi
 </button>
+    </span>
+<span><a href="category/listCategory">Danh sách thể loại</a></span>
 <p th:text="${mess}"></p>
+
 <table class="table table-striped">
     <tr>
         <th scope="col">Trạng thái</th>
@@ -71,9 +75,7 @@
    th:if="${blogList.hasNext()}">Next</a>
 </body>
 <script>
-    function remove(id,content){
-        alert(id)
-        alert(content)
+    function remove(id, content) {
         document.getElementById("idRemove").value = id;
         document.getElementById("contentRemove").innerHTML = content;
     }
@@ -134,7 +136,7 @@
             <div class="modal-body">
                 <form method="post" action="blog/removeBlog">
 
-                    <input hidden type="text" class="form-control" id="idRemove" name="idRemove" >
+                    <input hidden type="text" class="form-control" id="idRemove" name="idRemove">
                     <p>Bạn có muốn xóa nội dung <span style="color: red" id="contentRemove"> không ??</span></p>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Remove</button>
