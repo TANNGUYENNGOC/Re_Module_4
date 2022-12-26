@@ -28,7 +28,7 @@ public class customerController {
                                    @PageableDefault(size = 3,page = 0) Pageable pageable,
                                    Model model){
         model.addAttribute("listCustomer",customerService.listCustomer(pageable,name,email,customerTypeName));
-        model.addAttribute("listCustomerType",customerTypeService.findAll(pageable));
+        model.addAttribute("listCustomerType",customerTypeService.findAll());
         return "customer/list";
     }
 
@@ -44,6 +44,34 @@ public class customerController {
         BeanUtils.copyProperties(customerDTO,customer);
         customerService.save(customer);
         redirectAttributes.addFlashAttribute("mess","Thêm mới thành công");
+        return "redirect:/customer/listCustomer";
+    }
+
+    @PostMapping("/remove")
+    public String removeCustomer(@RequestParam("idRemove") int id,RedirectAttributes redirectAttributes){
+        Customer customer = customerService.findById(id).get();
+        customer.setFlag(true);
+        customerService.save(customer);
+        redirectAttributes.addFlashAttribute("mess","Xóa thành công khách hàng "+customer.getName());
+        return "redirect:/customer/listCustomer";
+    }
+
+    @GetMapping("{id}/update")
+    public String showFormupdateCustomer(@PathVariable("id") int id,Model model){
+        Customer customer = customerService.findById(id).get();
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer,customerDTO);
+        model.addAttribute("customerDTO",customerDTO);
+        model.addAttribute("listCustomerType",customerTypeService.findAll());
+        return "customer/update";
+    }
+
+    @PostMapping("/update")
+    public String updateCustomer(@ModelAttribute("customerDTO") CustomerDTO customerDTO,RedirectAttributes redirectAttributes){
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO,customer);
+        customerService.save(customer);
+        redirectAttributes.addFlashAttribute("mess","Chỉnh sửa thành công"); 
         return "redirect:/customer/listCustomer";
     }
 }
