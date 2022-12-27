@@ -1,6 +1,6 @@
 package com.furama_management.repository.customer;
 
-import com.furama_management.dto.CustomerDTO1;
+import com.furama_management.dto.customer.CustomerDTO1;
 import com.furama_management.model.customer.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

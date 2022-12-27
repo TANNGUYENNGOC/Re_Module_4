@@ -1,4 +1,4 @@
-package com.furama_management.dto;
+package com.furama_management.dto.customer;
 
 public interface CustomerDTO1 {
 

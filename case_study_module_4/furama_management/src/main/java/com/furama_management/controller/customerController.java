@@ -1,6 +1,6 @@
 package com.furama_management.controller;
 
-import com.furama_management.dto.CustomerDTO;
+import com.furama_management.dto.customer.CustomerDTO;
 import com.furama_management.model.customer.Customer;
 import com.furama_management.service.customer.ICustomerService;
 import com.furama_management.service.customer.ICustomerTypeService;
@@ -29,6 +29,7 @@ public class customerController {
                                    Model model){
         model.addAttribute("listCustomer",customerService.listCustomer(pageable,name,email,customerTypeName));
         model.addAttribute("listCustomerType",customerTypeService.findAll());
+        model.addAttribute("customerTypeName",customerTypeName);
         return "customer/list";
     }
 
@@ -71,7 +72,7 @@ public class customerController {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO,customer);
         customerService.save(customer);
-        redirectAttributes.addFlashAttribute("mess","Chỉnh sửa thành công"); 
+        redirectAttributes.addFlashAttribute("mess","Chỉnh sửa thành công");
         return "redirect:/customer/listCustomer";
     }
 }
