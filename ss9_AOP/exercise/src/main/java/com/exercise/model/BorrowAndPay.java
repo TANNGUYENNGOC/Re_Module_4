@@ -1,7 +1,5 @@
 package com.exercise.model;
-
 import javax.persistence.*;
-
 @Entity
 public class BorrowAndPay {
     @Id
@@ -15,6 +13,7 @@ public class BorrowAndPay {
 
     public BorrowAndPay() {
     }
+
 
     public BorrowAndPay(Book book) {
         this.book = book;
@@ -54,5 +53,4 @@ public class BorrowAndPay {
     public void setBook(Book book) {
         this.book = book;
     }
-
 }

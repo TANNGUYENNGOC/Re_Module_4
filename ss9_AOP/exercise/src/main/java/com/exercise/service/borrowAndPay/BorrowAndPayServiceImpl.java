@@ -1,16 +1,18 @@
 package com.exercise.service.borrowAndPay;
 
 import com.exercise.model.BorrowAndPay;
+import com.exercise.repository.IBorrowAndPayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 @Service
-public class BorrowAndPayService implements IBorrowAndPayService{
+public class BorrowAndPayServiceImpl implements IBorrowAndPayService {
     @Autowired
-    IBorrowAndPayService borrowAndPayService;
+    IBorrowAndPayRepository borrowAndPayRepository;
     @Override
     public Page<BorrowAndPay> findAll(Pageable pageable) {
         return null;
@@ -23,7 +25,7 @@ public class BorrowAndPayService implements IBorrowAndPayService{
 
     @Override
     public void save(BorrowAndPay borrowAndPay) {
-        borrowAndPayService.save(borrowAndPay);
+        borrowAndPayRepository.save(borrowAndPay);
     }
 
     @Override

@@ -24,7 +24,7 @@
             <td th:text="*{book.amount}"></td>
             <td th:text="*{book.availableBooks}"></td>
             <td th:text="*{book.borrowedBooks}"></td>
-            <td><button th:attr="onclick=|deleteCustomer('${book.id}')|" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Mượn</button></td>
+            <td><button th:attr="onclick=|borrowBooks('${book.id}','${book.nameBook}')|" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Mượn</button></td>
         </tr>
     </th:block>
 
@@ -32,8 +32,10 @@
 </table>
 </body>
 <script>
-    function borrowBooks(id){
-        document.getElementById("idBorrow").value = id;
+    function borrowBooks(id,nameBook){
+        alert(id)
+        document.getElementById("idBook").value = id;
+        document.getElementById("nameBook").value = nameBook;
     }
 </script>
 
@@ -45,17 +47,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form action="/borrowAndPay/borrow" method="post">
                     <div class="mb-3">
-                        <label for="idBorrow" class="col-form-label">ID</label>
-                        <input type="text" class="form-control" id="idBorrow">
+                        <label for="idBook" class="col-form-label">ID</label>
+                        <input type="text" class="form-control" id="idBook" name="idBook">
                     </div>
-
+                    <div class="mb-3">
+                        <label for="nameBook" class="col-form-label">Tên sách</label>
+                        <input type="text" class="form-control" id="nameBook">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
+
             </div>
         </div>
     </div>

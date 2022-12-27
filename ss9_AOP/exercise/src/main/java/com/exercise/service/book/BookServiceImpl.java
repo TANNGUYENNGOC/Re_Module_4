@@ -19,7 +19,7 @@ public class BookServiceImpl implements IBookService{
 
     @Override
     public Optional<Book> findById(Integer id) {
-        return Optional.empty();
+        return bookRepository.findById(id);
     }
 
     @Override
@@ -31,4 +31,6 @@ public class BookServiceImpl implements IBookService{
     public void remove(Integer id) {
 
     }
+
+
 }
