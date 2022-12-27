@@ -37,7 +37,7 @@ public class BorrowAndPayController {
 
     @PostMapping("/pay")
     public String payBook(@RequestParam("codePay")int codePay,RedirectAttributes redirectAttributes){
-        
+
         BorrowAndPay borrowAndPay = borrowAndPayService.borrowAndPay(codePay);
         Book book = bookService.findById(borrowAndPay.getBook().getId()).get();
         book.setAvailableBooks(book.getAvailableBooks()+1);
