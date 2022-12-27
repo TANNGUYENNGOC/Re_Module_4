@@ -8,6 +8,9 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <body>
+<p style="color: red" th:text="${mess}"></p>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#payBook" data-bs-whatever="@getbootstrap">Trả sách</button>
+
 <table class="table">
     <thead>
     <tr>
@@ -38,7 +41,31 @@
         document.getElementById("nameBook").value = nameBook;
     }
 </script>
-
+<!--modal trả-->
+<div class="modal fade" id="payBook" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/borrowAndPay/pay" method="post">
+                    <div class="mb-3">
+                        <label for="idBook" class="col-form-label">Nhập mã mượn sách</label>
+                        <input type="text" class="form-control"  name="codePay">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal mượn-->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

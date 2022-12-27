@@ -20,7 +20,7 @@ public class BorrowAndPayServiceImpl implements IBorrowAndPayService {
 
     @Override
     public Optional<BorrowAndPay> findById(Integer id) {
-        return Optional.empty();
+        return borrowAndPayRepository.findById(id);
     }
 
     @Override
@@ -30,6 +30,11 @@ public class BorrowAndPayServiceImpl implements IBorrowAndPayService {
 
     @Override
     public void remove(Integer id) {
+        borrowAndPayRepository.deleteById(id);
+    }
 
+    @Override
+    public BorrowAndPay borrowAndPay(int code) {
+        return borrowAndPayRepository.borrowAndPay(code);
     }
 }

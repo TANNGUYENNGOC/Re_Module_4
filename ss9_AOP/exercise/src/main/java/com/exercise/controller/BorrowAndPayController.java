@@ -31,7 +31,21 @@ public class BorrowAndPayController {
         Book book = new Book(idBook);
         BorrowAndPay borrowAndPay = new BorrowAndPay(code,book);
         borrowAndPayService.save(borrowAndPay);
-        redirectAttributes.addFlashAttribute("mess","MƯợn thành công");
+        redirectAttributes.addFlashAttribute("mess","MƯợn thành công,Mã mượn sách là "+code);
+        return "redirect:/book/list";
+    }
+
+    @PostMapping("/pay")
+    public String payBook(@RequestParam("codePay")int codePay,RedirectAttributes redirectAttributes){
+        
+        BorrowAndPay borrowAndPay = borrowAndPayService.borrowAndPay(codePay);
+        Book book = bookService.findById(borrowAndPay.getBook().getId()).get();
+        book.setAvailableBooks(book.getAvailableBooks()+1);
+        book.setBorrowedBooks(book.getBorrowedBooks()-1);
+        bookService.save(book);
+
+        borrowAndPayService.remove(borrowAndPay.getId());
+        redirectAttributes.addFlashAttribute("mess","Trả sách thành công");
         return "redirect:/book/list";
     }
 }
