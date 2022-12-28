@@ -1,7 +1,7 @@
 package com.exercise.service.borrowAndPay;
 
-import com.exercise.model.BorrowAndPay;
-import com.exercise.repository.IBorrowAndPayRepository;
+import com.exercise.model.Order;
+import com.exercise.repository.IOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,22 +10,22 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class BorrowAndPayServiceImpl implements IBorrowAndPayService {
+public class OrderServiceImpl implements IOrderService {
     @Autowired
-    IBorrowAndPayRepository borrowAndPayRepository;
+    IOrderRepository borrowAndPayRepository;
     @Override
-    public Page<BorrowAndPay> findAll(Pageable pageable) {
+    public Page<Order> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
-    public Optional<BorrowAndPay> findById(Integer id) {
+    public Optional<Order> findById(Integer id) {
         return borrowAndPayRepository.findById(id);
     }
 
     @Override
-    public void save(BorrowAndPay borrowAndPay) {
-        borrowAndPayRepository.save(borrowAndPay);
+    public void save(Order order) {
+        borrowAndPayRepository.save(order);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class BorrowAndPayServiceImpl implements IBorrowAndPayService {
     }
 
     @Override
-    public BorrowAndPay borrowAndPay(int code) {
+    public Order borrowAndPay(int code) {
         return borrowAndPayRepository.borrowAndPay(code);
     }
 }

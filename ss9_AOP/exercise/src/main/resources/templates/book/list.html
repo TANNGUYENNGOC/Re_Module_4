@@ -36,7 +36,6 @@
 </body>
 <script>
     function borrowBooks(id,nameBook){
-        alert(id)
         document.getElementById("idBook").value = id;
         document.getElementById("nameBook").value = nameBook;
     }
@@ -50,7 +49,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/borrowAndPay/pay" method="post">
+                <form action="/order/pay" method="post">
                     <div class="mb-3">
                         <label for="idBook" class="col-form-label">Nhập mã mượn sách</label>
                         <input type="text" class="form-control"  name="codePay">
@@ -74,7 +73,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="/borrowAndPay/borrow" method="post">
+                <form action="/order/borrow" method="post">
                     <div class="mb-3">
                         <label for="idBook" class="col-form-label">ID</label>
                         <input type="text" class="form-control" id="idBook" name="idBook">

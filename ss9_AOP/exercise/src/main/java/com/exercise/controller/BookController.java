@@ -1,6 +1,6 @@
 package com.exercise.controller;
 
-import com.exercise.model.BorrowAndPay;
+import com.exercise.model.Order;
 import com.exercise.service.book.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ public class BookController {
     @GetMapping("/list")
     public String showListBook(Model model, Pageable pageable){
         model.addAttribute("list",bookService.findAll(pageable));
-        model.addAttribute("borrowAndPay",new BorrowAndPay());
+        model.addAttribute("borrowAndPay",new Order());
         return "book/list";
     }
 }

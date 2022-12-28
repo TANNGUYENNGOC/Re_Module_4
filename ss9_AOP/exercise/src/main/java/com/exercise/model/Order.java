@@ -1,7 +1,8 @@
 package com.exercise.model;
 import javax.persistence.*;
 @Entity
-public class BorrowAndPay {
+@Table(name = "borrow_and_pay")
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -11,20 +12,20 @@ public class BorrowAndPay {
     @ManyToOne
     private Book book;
 
-    public BorrowAndPay() {
+    public Order() {
     }
 
 
-    public BorrowAndPay(Book book) {
+    public Order(Book book) {
         this.book = book;
     }
 
-    public BorrowAndPay(int code, Book book) {
+    public Order(int code, Book book) {
         this.code = code;
         this.book = book;
     }
 
-    public BorrowAndPay(int id, int code, Book book) {
+    public Order(int id, int code, Book book) {
         this.id = id;
         this.code = code;
         this.book = book;

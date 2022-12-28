@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Component
 @Aspect
 public class LogAOP {
-    @Pointcut("execution(*com.exercise.controller.BookController.*list(..))")
+    @Pointcut("execution(* com.exercise.controller.BookController.show*(..))")
     public void callMethod(){
     }
     @Before("callMethod()")
