@@ -15,7 +15,7 @@ public class FacilityTypeServiceServiceImpl implements IFacilityTypeService {
     IFacilityTypeRepository facilityTypeRepository;
     @Override
     public Page<FacilityType> findAll(Pageable pageable) {
-        return null;
+        return facilityTypeRepository.findAll(pageable);
     }
 
     @Override

@@ -119,15 +119,15 @@
         <td th:text="${f.getPoolArea()}"></td>
         <td th:text="${f.getNumberOfFloors()}"></td>
         <td th:text="${f.getFacilityFree()}"></td>
-<!--        <td><a class="btn btn-outline-success"-->
-<!--               th:href="@{/customer/{id}/update(id=${customer.getId()})}">Sửa</a></td>-->
-<!--        <td><button th:attr="onclick=|removeCustomer('${customer.getId()}','${customer.getName()}')|" type="button" class="btn btn-outline-success"  data-bs-toggle="modal" data-bs-target="#removeCustomer" data-bs-whatever="@mdo">Xóa</button></td>-->
+        <td><a class="btn btn-outline-success"
+               th:href="@{/facility/{id}/update(id=${f.id})}">Sửa</a></td>
+        <td><button th:attr="onclick=|removeCustomer('${f.id}','${f.name}')|" type="button" class="btn btn-outline-success"  data-bs-toggle="modal" data-bs-target="#removeCustomer" data-bs-whatever="@mdo">Xóa</button></td>
       </tr>
     </th:block>
   </table>
-<!--  <a class="btn btn-info" th:href="@{/customer/listCustomer(page=${listCustomer.number - 1})}" th:if="${listCustomer.hasPrevious()}">Previous</a>-->
-<!--  <span th:text="${listCustomer.number+1}+'/'+${listCustomer.totalPages}"></span>-->
-<!--  <a class="btn btn-info" th:href="@{/customer/listCustomer(page=${listCustomer.number + 1})}" th:if="${listCustomer.hasNext()}">Next</a>-->
+  <a class="btn btn-info" th:href="@{/facility/list(page=${listFacility.number - 1})}" th:if="${listFacility.hasPrevious()}">Previous</a>
+  <span th:text="${listFacility.number+1}+'/'+${listFacility.totalPages}"></span>
+  <a class="btn btn-info" th:href="@{/facility/list(page=${listFacility.number + 1})}" th:if="${listFacility.hasNext()}">Next</a>
 
 </div>
 </body>
@@ -148,11 +148,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form style="height: 300px" action="/customer/remove" method="post">
+        <form style="height: 300px" action="/facility/removeFacility" method="post">
           <div class="mb-3">
-            <label for="idRemove" class="form-label">ID</label>
-            <input type="text" class="form-control" id="idRemove" name="idRemove">
-            <p>Bạn có chắc muốn xóa khách hàng <span style="color: red" id="nameRemove"></span> không??</p>
+            <label hidden for="idRemove" class="form-label">ID</label>
+            <input hidden type="text" class="form-control" id="idRemove" name="idRemove">
+            <p>Bạn có chắc muốn xóa dịch vụ <span style="color: red" id="nameRemove"></span> không??</p>
           </div>
           <button type="submit" class="btn btn-primary">Remove</button>
           <a  class="btn btn-secondary" href="customer/listCustomer">Hủy</a>

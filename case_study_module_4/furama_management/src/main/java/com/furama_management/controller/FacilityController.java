@@ -1,18 +1,21 @@
 package com.furama_management.controller;
 
+import com.furama_management.dto.facility.FacilityDTO;
 import com.furama_management.dto.facility.FacilityDTO1;
 import com.furama_management.model.facility.Facility;
 import com.furama_management.model.facility.FacilityType;
+import com.furama_management.service.facility.IFacilityRentTypeService;
 import com.furama_management.service.facility.IFacilityService;
 import com.furama_management.service.facility.IFacilityTypeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/facility")
@@ -21,15 +24,63 @@ public class FacilityController {
     IFacilityService facilityService;
     @Autowired
     IFacilityTypeService facilityTypeService;
+    @Autowired
+    IFacilityRentTypeService facilityRentTypeService;
+
     @GetMapping("/list")
-    public String showListFacility(@RequestParam(defaultValue = "")String nameFacility,
-                                   @RequestParam(defaultValue = "")String facilityType,
+    public String showListFacility(@RequestParam(defaultValue = "") String nameFacility,
+                                   @RequestParam(defaultValue = "") String facilityType,
                                    Model model,
-                                   Pageable pageable){
-        Page<FacilityDTO1> listFacility = facilityService.listFacility(pageable,nameFacility,facilityType);
-        model.addAttribute("listFacilityType",facilityTypeService.findAll());
-        model.addAttribute("listFacility",listFacility);
+                                   @PageableDefault(size = 4, page = 0) Pageable pageable) {
+        Page<FacilityDTO1> listFacility = facilityService.listFacility(pageable, nameFacility, facilityType);
+        model.addAttribute("listFacilityType", facilityTypeService.findAll());
+        model.addAttribute("listFacility", listFacility);
         return "facility/list";
     }
 
+    @GetMapping("/create")
+    public String showFormCreate(Model model, Pageable pageable) {
+        model.addAttribute("facilityDTO", new FacilityDTO());
+        model.addAttribute("listRentType", facilityRentTypeService.findAll(pageable));
+        model.addAttribute("listFacilityType", facilityTypeService.findAll(pageable));
+        return "facility/create";
+    }
+
+    @PostMapping("/createFacility")
+    public String createFacility(@ModelAttribute("facilityDTO") FacilityDTO facilityDTO, RedirectAttributes redirectAttributes) {
+        Facility facility = new Facility();
+        BeanUtils.copyProperties(facilityDTO, facility);
+        facilityService.save(facility);
+        redirectAttributes.addFlashAttribute("mess", "Thêm mới thành công");
+        return "redirect:/facility/list";
+    }
+
+    @GetMapping("{id}/update")
+    public String showFormUpdate(@PathVariable("id") int id, Model model, Pageable pageable) {
+        Facility facility = facilityService.findById(id).get();
+        FacilityDTO facilityDTO = new FacilityDTO();
+        BeanUtils.copyProperties(facility, facilityDTO);
+        model.addAttribute("facilityDTO", facilityDTO);
+        model.addAttribute("listRentType", facilityRentTypeService.findAll(pageable));
+        model.addAttribute("listFacilityType", facilityTypeService.findAll(pageable));
+        return "facility/update";
+    }
+
+    @PostMapping("/updateFacility")
+    public String updateFacility(@ModelAttribute("facilityDTO") FacilityDTO facilityDTO, RedirectAttributes redirectAttributes) {
+        Facility facility = new Facility();
+        BeanUtils.copyProperties(facilityDTO, facility);
+        facilityService.save(facility);
+        redirectAttributes.addFlashAttribute("mess", "Chỉnh sửa thành công");
+        return "redirect:/facility/list";
+    }
+
+    @PostMapping("/removeFacility")
+    public String removeFacility(@RequestParam("idRemove") int id, RedirectAttributes redirectAttributes) {
+        Facility facility = facilityService.findById(id).get();
+        facility.setFlag(true);
+        facilityService.save(facility);
+        redirectAttributes.addFlashAttribute("mess", "Xóa thành công dịch vụ " + facility.getName());
+        return "redirect:/facility/list";
+    }
 }
