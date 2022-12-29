@@ -3,7 +3,7 @@ package com.furama_management.controller;
 import com.furama_management.dto.facility.FacilityDTO;
 import com.furama_management.dto.facility.FacilityDTO1;
 import com.furama_management.model.facility.Facility;
-import com.furama_management.model.facility.FacilityType;
+
 import com.furama_management.service.facility.IFacilityRentTypeService;
 import com.furama_management.service.facility.IFacilityService;
 import com.furama_management.service.facility.IFacilityTypeService;
