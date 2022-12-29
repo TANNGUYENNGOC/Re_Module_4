@@ -9,10 +9,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ICustomerRepository extends JpaRepository<Customer, Integer> {
     @Query(value = "select customer.id,ct.name as customerType,customer.name,customer.date_of_birth as dateOfBirth,customer.gender,customer.id_card as idCard,customer.phone_number as phoneNumber,customer.email,customer.address from customer join customer_type ct on ct.id = customer.customer_type_id where (customer.name like concat('%',:nameCustomer,'%') and ct.name like concat('%',:customerType,'%') and customer.email like concat('%',:emailCustomer,'%')) and customer.flag=0"
             , countQuery ="select * from (select customer.id,ct.name as customerType,customer.name,customer.date_of_birth as dateOfBirth,customer.gender,customer.id_card as idCard,customer.phone_number as phoneNumber,customer.email,customer.address from customer join customer_type ct on ct.id = customer.customer_type_id where (customer.name like concat('%',:nameCustomer,'%') and ct.name like concat('%',:customerType,'%') and customer.email like concat('%',:emailCustomer,'%')) and customer.flag=0)customer"
             , nativeQuery = true)
     Page<CustomerDTO1> listCustomer(Pageable pageable, @Param("nameCustomer") String nameCustomer,@Param("emailCustomer")String emailCustomer ,@Param("customerType") String customerType);
+
+    @Query(value = "select customer.id,ct.name as customerType,customer.name,customer.date_of_birth as dateOfBirth,customer.gender,customer.id_card as idCard,customer.phone_number as phoneNumber,customer.email,customer.address from customer join customer_type ct on ct.id = customer.customer_type_id where customer.flag=0"
+            , countQuery ="select * from (select customer.id,ct.name as customerType,customer.name,customer.date_of_birth as dateOfBirth,customer.gender,customer.id_card as idCard,customer.phone_number as phoneNumber,customer.email,customer.address from customer join customer_type ct on ct.id = customer.customer_type_id where customer.flag=0)customer"
+            , nativeQuery = true)
+    List<CustomerDTO1> listCustomer ();
+
 }

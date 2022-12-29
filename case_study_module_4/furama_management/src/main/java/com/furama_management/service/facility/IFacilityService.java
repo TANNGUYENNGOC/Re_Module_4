@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 
 public interface IFacilityService extends IGeneralService<Facility> {
     Page<FacilityDTO1> listFacility(Pageable pageable,String nameFacility, String facilityType);
-
+    List<FacilityDTO1> listFacility();
 }

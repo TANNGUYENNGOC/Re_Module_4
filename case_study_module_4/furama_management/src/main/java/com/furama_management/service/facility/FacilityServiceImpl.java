@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +39,10 @@ public class FacilityServiceImpl implements IFacilityService {
     @Override
     public Page<FacilityDTO1> listFacility(Pageable pageable, String nameFacility, String facilityType) {
         return facilityRepository.listFacility(pageable, nameFacility, facilityType);
+    }
+
+    @Override
+    public List<FacilityDTO1> listFacility() {
+        return facilityRepository.listFacility();
     }
 }
