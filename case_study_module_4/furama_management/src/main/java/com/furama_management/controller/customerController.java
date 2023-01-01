@@ -1,11 +1,14 @@
 package com.furama_management.controller;
 
 import com.furama_management.dto.customer.CustomerDTO;
+import com.furama_management.dto.customer.CustomerDTO1;
 import com.furama_management.model.customer.Customer;
+import com.furama_management.service.attach_facility.IAttachFacilityService;
 import com.furama_management.service.customer.ICustomerService;
 import com.furama_management.service.customer.ICustomerTypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -21,13 +24,24 @@ public class customerController {
     @Autowired
     ICustomerTypeService customerTypeService;
 
+    @Autowired
+    IAttachFacilityService attachFacilityService;
+
+    @GetMapping("{id}/listAttachFacility")
+    public String listAttachFacility(Model model
+            ,@PageableDefault(page = 0, size = 3)Pageable pageable
+            ,@PathVariable("id") int id){
+        model.addAttribute("list",customerService.listAttachFacility(id));
+        return "attach_facility/list";
+    }
+
     @GetMapping("/listCustomer")
     public String showListCustomer(@RequestParam(defaultValue = "")String name,
                                    @RequestParam(defaultValue = "")String email,
                                    @RequestParam(defaultValue = "")String customerTypeName,
                                    @PageableDefault(size = 3,page = 0) Pageable pageable,
                                    Model model){
-        model.addAttribute("listCustomer",customerService.listCustomer(pageable,name,email,customerTypeName));
+        model.addAttribute("customers",customerService.listCustomer(pageable,name,email,customerTypeName));
         model.addAttribute("listCustomerType",customerTypeService.findAll());
         model.addAttribute("customerTypeName",customerTypeName);
         return "customer/list";
@@ -74,5 +88,13 @@ public class customerController {
         customerService.save(customer);
         redirectAttributes.addFlashAttribute("mess","Chỉnh sửa thành công");
         return "redirect:/customer/listCustomer";
+    }
+
+    @GetMapping("/listCustomerJoinContract")
+    public String listCustomerJoinContract(Model model,@PageableDefault(page = 0, size = 3)Pageable pageable){
+        Page<CustomerDTO1> customerDTO1s = customerService.listCustomerJoinContract(pageable);
+        model.addAttribute("customers", customerDTO1s);
+        model.addAttribute("customerTypeList",customerTypeService.findAll());
+        return "/customer/list1";
     }
 }

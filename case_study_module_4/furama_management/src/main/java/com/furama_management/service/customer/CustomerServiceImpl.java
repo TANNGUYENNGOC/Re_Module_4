@@ -1,5 +1,6 @@
 package com.furama_management.service.customer;
 
+import com.furama_management.dto.attach_facility.IAttachFacilityCustomer;
 import com.furama_management.dto.customer.CustomerDTO1;
 import com.furama_management.model.customer.Customer;
 import com.furama_management.repository.customer.ICustomerRepository;
@@ -42,5 +43,15 @@ public class CustomerServiceImpl implements ICustomerService{
     @Override
     public List<CustomerDTO1> listCustomer() {
         return customerRepository.listCustomer();
+    }
+
+    @Override
+    public Page<CustomerDTO1> listCustomerJoinContract(Pageable pageable) {
+        return customerRepository.listCustomerJoinContract(pageable);
+    }
+
+    @Override
+    public List<IAttachFacilityCustomer> listAttachFacility(int id) {
+        return customerRepository.listAttachFacility(id);
     }
 }
