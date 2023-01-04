@@ -57,7 +57,7 @@
             </ul>
         </div>
         <div class="col-xl-6" style="background-color: #0d6056;padding-top: 10px">
-            <form class="d-flex" role="search" action="/customer/search" method="get">
+            <form class="d-flex" role="search" action="/customer/listCustomer" method="get">
                 <div class="col-7 d-flex">
                     <input style="height: 80%" class="form-control me-2" type="search" placeholder="Tên khách hàng"
                            aria-label="Search" name="name" th:value="${name}">
@@ -67,7 +67,7 @@
                 <div class="form-control-sm me-2">
                     <select class="form-select" name="customerTypeName">
                         <option th:value="${''}">Customer Type</option>
-                        <option th:each="customerTypeName : ${customerTypeList}" th:value="${customerTypeName.name}"
+                        <option th:each="customerTypeName : ${listCustomerType}" th:value="${customerTypeName.name}"
                                 th:text="${customerTypeName.name}"></option>
                     </select>
                 </div>
@@ -88,7 +88,11 @@
             <p style="color: red" th:text="${mess}"></p>
         </div>
         <div class="col-2">
-            <a class="btn btn-warning text-center" href="/customer/create">Thêm mới khách hàng</a>
+            <!--            <a class="btn btn-warning text-center" href="/customer/create">Thêm mới khách hàng</a>-->
+            <button type="button"
+                    class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Thêm mới khách hàng
+            </button>
         </div>
 
     </div>
@@ -123,14 +127,96 @@
             </tr>
         </th:block>
     </table>
-    <a th:href="@{/customer/list(page=${customers.number - 1})}" th:if="${customers.hasPrevious()}"
+    <a th:href="@{/customer/listCustomer(page=${customers.number - 1})}" th:if="${customers.hasPrevious()}"
        class="btn btn-success">Previous</a>
     <span th:text="${customers.number+1}+'/'+${customers.totalPages}"></span>
-    <a th:href="@{/customer/list(page=${customers.number + 1})}" th:if="${customers.hasNext()}" class="btn btn-success">Next</a>
+    <a th:href="@{/customer/listCustomer(page=${customers.number + 1})}" th:if="${customers.hasNext()}"
+       class="btn btn-success">Next</a>
 </div>
+<input type="hidden" id="modalCheck" th:value="${modal}">
 </body>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form style="height: 300px" th:object="${customerDTO}" action="/customer/create" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Loại khách hàng</label>
+                        <select th:field="*{customerType}" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                            <option th:each="customerType:${listCustomerType}"
+                                    th:text="${customerType.name}" th:value="${customerType.id}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail2" class="form-label">Tên khách hàng</label>
+                        <input type="text" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" th:field="*{name}">
+                        <p style="color: red" th:errors="*{name}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail3" class="form-label">Ngày sinh</label>
+                        <input type="date" class="form-control" id="exampleInputEmail3" aria-describedby="emailHelp" th:field="*{dateOfBirth}">
+                        <p style="color: red" th:errors="*{dateOfBirth}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" th:field="*{gender}" th:value="true">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                Nam
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"  th:field="*{gender}" th:value="false">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                Đàn bà
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail5" class="form-label">Số CMND</label>
+                        <input type="text" class="form-control" id="exampleInputEmail5" aria-describedby="emailHelp" th:field="*{idCard}">
+                        <p style="color: red" th:errors="*{idCard}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail6" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="exampleInputEmail6" aria-describedby="emailHelp" th:field="*{phoneNumber}">
+                        <p style="color: red" th:errors="*{phoneNumber}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail7" class="form-label">Email</label>
+                        <input type="text" class="form-control" id="exampleInputEmail7" aria-describedby="emailHelp" th:field="*{email}">
+                        <p style="color: red" th:errors="*{email}"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail8" class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control" id="exampleInputEmail8" aria-describedby="emailHelp" th:field="*{address}">
+                        <p style="color: red" th:errors="*{address}"></p>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a  class="btn btn-secondary" href="customer/listCustomer">Hủy</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
+
+<script>
+    let modal = document.getElementById("modalCheck").value;
+    if (modal == "true") {
+        $(document).ready(
+            function () {
+                $('#exampleModal').appendTo('body').modal('show')
+            }
+        )
+    }
+</script>
 </html>

@@ -20,15 +20,15 @@ public class AttachFacilityRestController {
     @Autowired
     ICustomerService customerService;
     //Của contract
-//    @GetMapping("/showListAttachFacility/{id}")
-//    public ResponseEntity<List<IAttachFacilityDTO>> getList(
-//             @PathVariable("id") int id) {
-//        List<IAttachFacilityDTO> attachFacilityDTOS = contractService.listAttachFacility1(id);
-//        if (attachFacilityDTOS.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }
-//        return new ResponseEntity<>(attachFacilityDTOS, HttpStatus.OK);
-//    }
+    @GetMapping("/showListAttachFacility/{id}")
+    public ResponseEntity<List<IAttachFacilityDTO>> getList(
+             @PathVariable("id") int id) {
+        List<IAttachFacilityDTO> attachFacilityDTOS = contractService.listAttachFacility(id);
+        if (attachFacilityDTOS.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(attachFacilityDTOS, HttpStatus.OK);
+    }
     //của customer đang sử dụng dịch vụ
     @GetMapping("showListAttachFacilityCustomer/{id}")
     public ResponseEntity<List<IAttachFacilityCustomer>> listAttachFacilityCustomer(@PathVariable("id") int id){

@@ -1,10 +1,13 @@
 package com.furama_management.dto.facility;
 
+import com.furama_management.model.facility.Facility;
 import com.furama_management.model.facility.FacilityType;
 import com.furama_management.model.facility.RentType;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 
-public class FacilityDTO {
+public class FacilityDTO implements Validator {
     private int id;
     private String name;
     private int area;
@@ -50,6 +53,7 @@ public class FacilityDTO {
         this.numberOfFloors = numberOfFloors;
         this.facilityFree = facilityFree;
     }
+
     public FacilityDTO(String name, int area, double cost, int maxPeople, RentType rentType, String standardRoom, String descriptionOtherConvenience, double poolArea, int numberOfFloos) {
         this.name = name;
         this.area = area;
@@ -99,7 +103,7 @@ public class FacilityDTO {
         this.flag = flag;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -201,5 +205,28 @@ public class FacilityDTO {
 
     public void setFlag(boolean flag) {
         this.flag = flag;
+    }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return false;
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+        FacilityDTO facilityDTO = (FacilityDTO) target;
+        if (facilityDTO.getName().equals("")){
+            errors.rejectValue("name","name","Tên dịch vụ không được để trống");
+        }
+
+        if (facilityDTO.getArea() <= 0) {
+            errors.rejectValue("area", "area", "Diện tích phải lớn hơn 0");
+        }
+        if (facilityDTO.getCost() <= 0) {
+            errors.rejectValue("cost", "cost", "Chi phí thuê phải lớn hơn 0");
+        }
+        if (facilityDTO.getMaxPeople() <= 0) {
+            errors.rejectValue("maxPeople", "maxPeople", "Số người tối đa phải lớn hơn 0");
+        }
     }
 }

@@ -34,4 +34,5 @@ public interface ICustomerRepository extends JpaRepository<Customer, Integer> {
             , nativeQuery = true)
     List<IAttachFacilityCustomer> listAttachFacility(@Param("id") int id);
 
+    List<Customer> findAll();
 }

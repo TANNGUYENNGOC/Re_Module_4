@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +52,23 @@ public class ContractController {
     }
 
     @PostMapping("/create")
-    public String createContract(@ModelAttribute("contractDTO")ContractDto contractDto, RedirectAttributes redirectAttributes){
+    public String createContract(@Validated @ModelAttribute("contractDTO")ContractDto contractDto,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model,
+                                 @PageableDefault(size = 3, page = 0) Pageable  pageable){
+        contractDto.validate(contractDto,bindingResult);
+        if(bindingResult.hasErrors()){
+            model.addAttribute("listCustomer",customerService.listCustomer());
+            model.addAttribute("listEmployee",employeeService.findAll());
+            model.addAttribute("listFacility",facilityService.listFacility());
+            model.addAttribute("contractDetail",new ContractDetail());
+//            model.addAttribute("attachFacilityList",attachFacilityService.findAll());
+            model.addAttribute("modalCreateContract",true);
+            model.addAttribute("listContract",contractService.listContract(pageable));
+
+            return "contract/list";
+        }
         Contract contract = new Contract();
         BeanUtils.copyProperties(contractDto,contract);
         contractService.save(contract);

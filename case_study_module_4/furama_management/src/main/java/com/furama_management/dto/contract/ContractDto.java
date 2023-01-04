@@ -2,8 +2,10 @@ package com.furama_management.dto.contract;
 import com.furama_management.model.customer.Customer;
 import com.furama_management.model.employee.Employee;
 import com.furama_management.model.facility.Facility;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
-public class ContractDto {
+public class ContractDto implements Validator {
 
     private int id;
     private String startDate;
@@ -92,5 +94,32 @@ public class ContractDto {
 
     public void setFacility(Facility facility) {
         this.facility = facility;
+    }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return false;
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+        ContractDto contractDto =(ContractDto) target;
+
+        if (contractDto.getStartDate().equals("")){
+            errors.rejectValue("startDate","startDate","Vui lòng chọn ngày bắt đầu");
+        }
+        if (contractDto.getEndDate().equals("")){
+            errors.rejectValue("endDate","endDate","Vui lòng chọn ngày kết thúc");
+        }
+
+        if (contractDto.getDeposit()<=0){
+            errors.rejectValue("deposit","deposit","Tiền đặt cọc phải lớn hơn 0");
+        }else {
+            String deposit = String.valueOf(contractDto.getDeposit());
+            if (deposit.equals("")){
+                errors.rejectValue("deposit","deposit","Vui lòng nhập tiền đặt cọc");
+            }
+        }
+
     }
 }

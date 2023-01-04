@@ -54,4 +54,9 @@ public class CustomerServiceImpl implements ICustomerService{
     public List<IAttachFacilityCustomer> listAttachFacility(int id) {
         return customerRepository.listAttachFacility(id);
     }
+
+    @Override
+    public List<Customer> findAll() {
+        return customerRepository.findAll();
+    }
 }

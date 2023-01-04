@@ -15,4 +15,6 @@ public interface ICustomerService extends IGeneralService<Customer> {
     List<CustomerDTO1> listCustomer ();
     Page<CustomerDTO1> listCustomerJoinContract(Pageable pageable);
     List<IAttachFacilityCustomer> listAttachFacility(int id);
+    List<Customer> findAll();
+
 }

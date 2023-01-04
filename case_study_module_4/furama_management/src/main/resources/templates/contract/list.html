@@ -68,7 +68,7 @@
         </div>
         <div class="col-2">
             <!--            <a class="btn btn-warning" th:href="@{/contract/addContract}">Thêm mới hợp đồng</a>-->
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal111"
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalCreateContract"
                     data-bs-whatever="@mdo">THêm mới hợp đồng
             </button>
         </div>
@@ -116,16 +116,16 @@
         </th:block>
     </table>
 
-
     <a th:href="@{/contract/list(page=${listContract.number - 1})}" th:if="${listContract.hasPrevious()}"
        class="btn btn-success">Previous</a>
     <span th:text="${listContract.number+1}+'/'+${listContract.totalPages}"></span>
     <a th:href="@{/contract/list(page=${listContract.number + 1})}" th:if="${listContract.hasNext()}"
        class="btn btn-success">Next</a>
 </div>
+<input type="hidden" id="modaleCreate" th:value="${modalCreateContract}">
 </body>
 <!-- Modal hêm mới hợp đồng-->
-<div class="modal fade" id="exampleModal111" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCreateContract" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -140,12 +140,15 @@
                         <input type="date" class="form-control" id="exampleInputEmail2"
                                aria-describedby="emailHelp"
                                th:field="*{startDate}">
+                        <p style="color: red" th:errors="*{startDate}"></p>
+
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail3" class="form-label">Ngày kết thúc</label>
                         <input type="date" class="form-control" id="exampleInputEmail3"
                                aria-describedby="emailHelp"
                                th:field="*{endDate}">
+                        <p style="color: red" th:errors="*{endDate}"></p>
                     </div>
 
                     <div class="mb-3">
@@ -153,6 +156,8 @@
                         <input type="text" class="form-control" id="exampleInputEmail5"
                                aria-describedby="emailHelp"
                                th:field="*{deposit}">
+                        <p style="color: red" th:errors="*{deposit}"></p>
+
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail100" class="form-label">Nhân viên làm hợp đồng</label>
@@ -229,9 +234,88 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Danh sách dịch vụ đi kèm</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Stt</th>
+                        <th scope="col">Tên dịch vụ</th>
+                        <th scope="col">Giá</th>
+                        <th scope="col">Đơn vị</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Thành tiền</th>
+                    </tr>
+                    </thead>
+                    <tbody id="myTableContractDetail">
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    function contractDetail(id){
+    let modalCreate = document.getElementById("modaleCreate").value;
+    if (modalCreate == 'true'){
+        $(document).ready(
+            function (){
+                $('#modalCreateContract').appendTo('body').modal('show')
+            }
+        )
+    }
+</script>
+<script>
+    function contractDetail(id) {
         document.getElementById("idContract").value = id;
+    }
+</script>
+
+<!-- Modal hiển thị danh sách dịch vụ đi kèm -->
+
+
+<script>
+    // <%--   hien thị chi tiết tường đối tượng bằng ajac--%>
+    function info(id) {
+        $.ajax({
+            url: "http://localhost:8080/api-attachFacility/showListAttachFacility/" + id,
+            type: "GET",
+            contentType: "application/json; charset =utf-8", //xóa vẫn chạy(dũng nói)
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                let sumMony = 0;
+                let myTableContractDetail = "";
+                for (let i = 0; i < data.length; i++) {
+                    myTableContractDetail +=
+                        `<tr>
+                               <th>${i + 1}</th>
+                               <td>${data[i].name}</td>
+                               <td>${data[i].status}</td>
+                               <td>${data[i].quantity}</td>
+                               <td>${data[i].cost}</td>
+                               <td>${data[i].unit}</td>
+                               <td>${data[i].sumAttach}</td>
+                         </tr>
+                             `
+                }
+                console.log(myTableContractDetail)
+                $("#myTableContractDetail").empty();
+                $("#myTableContractDetail").append(myTableContractDetail);
+            }
+        });
     }
 </script>
 <!-- JavaScript Bundle with Popper -->
@@ -239,5 +323,4 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 </script>
-
 </html>

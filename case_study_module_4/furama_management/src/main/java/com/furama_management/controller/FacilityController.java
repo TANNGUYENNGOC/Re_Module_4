@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,8 +49,18 @@ public class FacilityController {
     }
 
     @PostMapping("/createFacility")
-    public String createFacility(@ModelAttribute("facilityDTO") FacilityDTO facilityDTO, RedirectAttributes redirectAttributes) {
+    public String createFacility(@Validated @ModelAttribute("facilityDTO") FacilityDTO facilityDTO,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model,
+                                 Pageable pageable) {
         Facility facility = new Facility();
+        facilityDTO.validate(facilityDTO,bindingResult);
+        if(bindingResult.hasErrors()){
+            model.addAttribute("listRentType", facilityRentTypeService.findAll(pageable));
+            model.addAttribute("listFacilityType", facilityTypeService.findAll(pageable));
+            return "facility/create";
+        }
         BeanUtils.copyProperties(facilityDTO, facility);
         facilityService.save(facility);
         redirectAttributes.addFlashAttribute("mess", "Thêm mới thành công");
@@ -67,7 +79,19 @@ public class FacilityController {
     }
 
     @PostMapping("/updateFacility")
-    public String updateFacility(@ModelAttribute("facilityDTO") FacilityDTO facilityDTO, RedirectAttributes redirectAttributes) {
+    public String updateFacility(@Validated @ModelAttribute("facilityDTO") FacilityDTO facilityDTO,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model,
+                                 Pageable pageable) {
+        facilityDTO.validate(facilityDTO,bindingResult);
+        if (bindingResult.hasErrors()){
+            model.addAttribute("facilityDTO", facilityDTO);
+            model.addAttribute("listRentType", facilityRentTypeService.findAll(pageable));
+            model.addAttribute("listFacilityType", facilityTypeService.findAll(pageable));
+            return "facility/update";
+        }
+
         Facility facility = new Facility();
         BeanUtils.copyProperties(facilityDTO, facility);
         facilityService.save(facility);

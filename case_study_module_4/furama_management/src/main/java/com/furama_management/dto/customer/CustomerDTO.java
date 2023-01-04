@@ -1,9 +1,16 @@
 package com.furama_management.dto.customer;
 
+import com.furama_management.model.customer.Customer;
 import com.furama_management.model.customer.CustomerType;
+import com.furama_management.service.customer.ICustomerService;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
-public class CustomerDTO {
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 
+public class CustomerDTO implements Validator {
     private int id;
     private CustomerType customerType;
     private String name;
@@ -15,6 +22,7 @@ public class CustomerDTO {
     private String email;
     private String address;
     private boolean flag;
+
 
     public CustomerDTO() {
     }
@@ -121,5 +129,80 @@ public class CustomerDTO {
 
     public void setFlag(boolean flag) {
         this.flag = flag;
+    }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return false;
+    }
+
+    public void checkPhoneNumber(List<Customer> list, CustomerDTO customerDTO, Errors errors) {
+        for (Customer x : list) {
+            if (x.getPhoneNumber().equals(customerDTO.phoneNumber)) {
+                errors.rejectValue("phoneNumber", "phoneNumber", "Số điện thoại " + customerDTO.getPhoneNumber() + " đã có người dùng rồi");
+            }
+        }
+    }
+
+    public void checkIDCard(List<Customer> list, CustomerDTO customerDTO, Errors errors) {
+        for (Customer x : list) {
+            if (x.getIdCard().equals(customerDTO.idCard)) {
+                errors.rejectValue("idCard", "idCard", "Số CMND " + customerDTO.getIdCard() + " đã tồn tại");
+            }
+        }
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+
+        CustomerDTO customerDto = (CustomerDTO) target;
+        //Validate name
+        if (customerDto.getName().matches("")) {
+            errors.rejectValue("name", "name", "Tên khách hàng không được để trống.");
+        } else if (!customerDto.getName().matches("^\\p{Lu}\\p{Ll}+(\\s\\p{Lu}\\p{Ll}+)*$")) {
+            errors.rejectValue("name", "name", "Tên khách hàng không được chứa số. Và các kí tự đầu tiên của mỗi từ phải viết hoa.");
+        }
+
+        //Validate age of birth day
+        String birthdayVal = customerDto.getDateOfBirth();
+        if (birthdayVal.matches("")) {
+            errors.rejectValue("dateOfBirth", "dateOfBirth", "Vui lòng chọn ngày sinh");
+        }
+        else {
+            LocalDate dayOfBirth = LocalDate.parse(birthdayVal);
+            LocalDate now = LocalDate.now();
+            Period checkAge = Period.between(dayOfBirth, now);
+            if (checkAge.getYears() < 18 | checkAge.getYears() > 100) {
+                errors.rejectValue("dateOfBirth", "dateOfBirth", "Tuổi phải lớn hơn hoặc bằng 18 và nhỏ hơn 100");
+            }
+        }
+
+        //Validate số điện thoại
+        if (customerDto.getPhoneNumber().matches("")) {
+            errors.rejectValue("phoneNumber", "phoneNumber", "Số điện thoại không được để trống");
+        } else if (!customerDto.getPhoneNumber().matches("^0[0-9]{9}$")) {
+            errors.rejectValue("phoneNumber", "phoneNumber", "Số điện thoại phải bắt đầu bằng 0 và có 10 số");
+        }
+//
+
+        //Validate số CMND
+        if (customerDto.getIdCard().matches("")) {
+            errors.rejectValue("idCard", "idCard", "Số CMND phải không được để trống");
+        } else if (!customerDto.getIdCard().matches("[0-9]{10}")) {
+            errors.rejectValue("idCard", "idCard", "Số CMND phải là 10 số và không được chứa bất kì kí tự nào khác");
+        }
+        //Validate email
+        if (customerDto.getEmail().matches("")) {
+            errors.rejectValue("email", "email", "Email không được để trống");
+        } else if (!customerDto.getEmail().matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            errors.rejectValue("email", "email", "Email không đúng định dạng");
+        }
+
+        // Validate địa chỉ
+        if (customerDto.getAddress().matches("")) {
+            errors.rejectValue("address", "address", "Bạn quịt nợ tôi biết tìm đâu");
+        } else if (!customerDto.getAddress().matches("^\\p{Lu}\\p{Ll}+(\\s\\p{Lu}\\p{Ll}+)*$")) {
+            errors.rejectValue("address", "address", "Ghi hoa chữ cái đầu");
+        }
     }
 }
