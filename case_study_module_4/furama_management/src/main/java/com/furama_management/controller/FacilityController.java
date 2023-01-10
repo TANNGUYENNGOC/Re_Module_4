@@ -23,17 +23,28 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/facility")
 public class FacilityController {
     @Autowired
-    IFacilityService facilityService;
+    private IFacilityService facilityService;
     @Autowired
-    IFacilityTypeService facilityTypeService;
+    private IFacilityTypeService facilityTypeService;
     @Autowired
-    IFacilityRentTypeService facilityRentTypeService;
+    private IFacilityRentTypeService facilityRentTypeService;
 
     @GetMapping("/list")
     public String showListFacility(@RequestParam(defaultValue = "") String nameFacility,
                                    @RequestParam(defaultValue = "") String facilityType,
                                    Model model,
                                    @PageableDefault(size = 4, page = 0) Pageable pageable) {
+        if (!facilityType.equals("")){
+             Page<FacilityDTO1> listFacility = facilityService.searchFacilityType(facilityType,pageable);
+            model.addAttribute("listFacilityType", facilityTypeService.findAll());
+            model.addAttribute("listFacility", listFacility);
+            return "facility/list";
+        } else if (!nameFacility.equals("")){
+            Page<FacilityDTO1> listFacility = facilityService.searchName(nameFacility,pageable);
+            model.addAttribute("listFacilityType", facilityTypeService.findAll());
+            model.addAttribute( "listFacility", listFacility);
+            return "facility/list";
+        }
         Page<FacilityDTO1> listFacility = facilityService.listFacility(pageable, nameFacility, facilityType);
         model.addAttribute("listFacilityType", facilityTypeService.findAll());
         model.addAttribute("listFacility", listFacility);
@@ -55,7 +66,7 @@ public class FacilityController {
                                  Model model,
                                  Pageable pageable) {
         Facility facility = new Facility();
-        facilityDTO.validate(facilityDTO,bindingResult);
+        facilityDTO.checkDuplicate(facilityService.findAll(),facilityDTO,bindingResult);
         if(bindingResult.hasErrors()){
             model.addAttribute("listRentType", facilityRentTypeService.findAll(pageable));
             model.addAttribute("listFacilityType", facilityTypeService.findAll(pageable));

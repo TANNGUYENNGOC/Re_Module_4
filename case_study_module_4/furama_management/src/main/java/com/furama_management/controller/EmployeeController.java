@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("employee")
 public class EmployeeController {
     @Autowired
-    IEmployeeService employeeService;
+    private IEmployeeService employeeService;
 
     @GetMapping("/list")
     public String showListEmployee(Model model, Pageable pageable){

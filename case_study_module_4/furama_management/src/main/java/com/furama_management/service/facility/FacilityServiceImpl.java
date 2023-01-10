@@ -45,4 +45,19 @@ public class FacilityServiceImpl implements IFacilityService {
     public List<FacilityDTO1> listFacility() {
         return facilityRepository.listFacility();
     }
+
+    @Override
+    public List<Facility> findAll() {
+        return facilityRepository.findAll();
+    }
+
+    @Override
+    public Page<FacilityDTO1> searchName(String nameFacility, Pageable pageable) {
+        return facilityRepository.searchName(nameFacility,pageable);
+    }
+
+    @Override
+    public Page<FacilityDTO1> searchFacilityType(String facilityType, Pageable pageable) {
+        return facilityRepository.searchFacilityType(facilityType,pageable);
+    }
 }

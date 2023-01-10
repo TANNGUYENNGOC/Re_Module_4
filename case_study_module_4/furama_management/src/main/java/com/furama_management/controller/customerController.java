@@ -7,12 +7,14 @@ import com.furama_management.service.attach_facility.IAttachFacilityService;
 import com.furama_management.service.customer.ICustomerService;
 import com.furama_management.service.customer.ICustomerTypeService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +24,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/customer")
 public class customerController {
     @Autowired
-    ICustomerService customerService;
+    private ICustomerService customerService;
     @Autowired
-    ICustomerTypeService customerTypeService;
+    private ICustomerTypeService customerTypeService;
 
     @Autowired
-    IAttachFacilityService attachFacilityService;
+    private IAttachFacilityService attachFacilityService;
 
     @GetMapping("{id}/listAttachFacility")
     public String listAttachFacility(Model model
@@ -65,7 +67,7 @@ public class customerController {
                                  @RequestParam(defaultValue = "") String email,
                                  @RequestParam(defaultValue = "") String customerTypeName,
                                  @PageableDefault(size = 3, page = 0) Pageable pageable) {
-        new CustomerDTO().validate(customerDTO, bindingResult);
+        new CustomerDTO().checkDuplicate(customerService.findAll(),customerDTO, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("listCustomerType", customerTypeService.findAll());
             model.addAttribute("modal", true);

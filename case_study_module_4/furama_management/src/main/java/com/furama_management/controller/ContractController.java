@@ -27,59 +27,60 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/contract")
 public class ContractController {
     @Autowired
-    IContractService contractService;
+    private IContractService contractService;
     @Autowired
-    ICustomerService customerService;
+    private ICustomerService customerService;
     @Autowired
-    IEmployeeService employeeService;
+    private IEmployeeService employeeService;
     @Autowired
-    IFacilityService facilityService;
+    private IFacilityService facilityService;
     @Autowired
-    IAttachFacilityService attachFacilityService;
+    private IAttachFacilityService attachFacilityService;
     @Autowired
-    IContractDetailService contractDetailService;
-    @GetMapping("/list")
-    public String showListContract(Model model,@PageableDefault(size = 3,page = 0) Pageable pageable){
+    private IContractDetailService contractDetailService;
 
-        model.addAttribute("listContract",contractService.listContract(pageable));
-        model.addAttribute("contractDTO",new ContractDto());
-        model.addAttribute("listCustomer",customerService.listCustomer());
-        model.addAttribute("listEmployee",employeeService.findAll());
-        model.addAttribute("listFacility",facilityService.listFacility());
-        model.addAttribute("contractDetail",new ContractDetail());
-        model.addAttribute("attachFacilityList",attachFacilityService.findAll());
+    @GetMapping("/list")
+    public String showListContract(Model model, @PageableDefault(size = 3, page = 0) Pageable pageable) {
+
+        model.addAttribute("listContract", contractService.listContract(pageable));
+        model.addAttribute("contractDTO", new ContractDto());
+        model.addAttribute("listCustomer", customerService.listCustomer());
+        model.addAttribute("listEmployee", employeeService.findAll());
+        model.addAttribute("listFacility", facilityService.listFacility());
+        model.addAttribute("contractDetail", new ContractDetail());
+        model.addAttribute("attachFacilityList", attachFacilityService.findAll());
         return "contract/list";
     }
 
     @PostMapping("/create")
-    public String createContract(@Validated @ModelAttribute("contractDTO")ContractDto contractDto,
+    public String createContract(@Validated @ModelAttribute("contractDTO") ContractDto contractDto,
                                  BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes,
                                  Model model,
-                                 @PageableDefault(size = 3, page = 0) Pageable  pageable){
-        contractDto.validate(contractDto,bindingResult);
-        if(bindingResult.hasErrors()){
-            model.addAttribute("listCustomer",customerService.listCustomer());
-            model.addAttribute("listEmployee",employeeService.findAll());
-            model.addAttribute("listFacility",facilityService.listFacility());
-            model.addAttribute("contractDetail",new ContractDetail());
+                                 @PageableDefault(size = 3, page = 0) Pageable pageable) {
+        contractDto.validate(contractDto, bindingResult);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("listCustomer", customerService.listCustomer());
+            model.addAttribute("listEmployee", employeeService.findAll());
+            model.addAttribute("listFacility", facilityService.listFacility());
+            model.addAttribute("contractDetail", new ContractDetail());
 //            model.addAttribute("attachFacilityList",attachFacilityService.findAll());
-            model.addAttribute("modalCreateContract",true);
-            model.addAttribute("listContract",contractService.listContract(pageable));
+            model.addAttribute("modalCreateContract", true);
+            model.addAttribute("listContract", contractService.listContract(pageable));
 
             return "contract/list";
         }
         Contract contract = new Contract();
-        BeanUtils.copyProperties(contractDto,contract);
+        BeanUtils.copyProperties(contractDto, contract);
         contractService.save(contract);
-        redirectAttributes.addFlashAttribute("mess","Thêm mới thành công");
+        redirectAttributes.addFlashAttribute("mess", "Thêm mới thành công");
         return "redirect:/contract/list";
     }
 
     @PostMapping("createContractDetail")
-    public String createContractDetail(@ModelAttribute("contractDetail")ContractDetail contractDetail,RedirectAttributes redirectAttributes){
+    public String createContractDetail(@ModelAttribute("contractDetail") ContractDetail contractDetail, RedirectAttributes redirectAttributes) {
         contractDetailService.save(contractDetail);
-        redirectAttributes.addFlashAttribute("mess","Thêm mới thành công");
+        redirectAttributes.addFlashAttribute("mess", "Thêm mới thành công");
         return "redirect:/contract/list";
     }
 }

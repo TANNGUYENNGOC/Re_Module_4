@@ -13,4 +13,8 @@ import java.util.List;
 public interface IFacilityService extends IGeneralService<Facility> {
     Page<FacilityDTO1> listFacility(Pageable pageable,String nameFacility, String facilityType);
     List<FacilityDTO1> listFacility();
+    List<Facility> findAll();
+    Page<FacilityDTO1> searchName(String nameFacility,Pageable pageable);
+    Page<FacilityDTO1> searchFacilityType(String facilityType,Pageable pageable);
+
 }

@@ -16,9 +16,9 @@ import java.util.List;
 @CrossOrigin("*")
 public class AttachFacilityRestController {
     @Autowired
-    IContractService contractService;
+    private IContractService contractService;
     @Autowired
-    ICustomerService customerService;
+    private ICustomerService customerService;
     //Của contract
     @GetMapping("/showListAttachFacility/{id}")
     public ResponseEntity<List<IAttachFacilityDTO>> getList(

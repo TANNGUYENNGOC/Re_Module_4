@@ -6,6 +6,8 @@ import com.furama_management.model.facility.RentType;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.List;
+
 
 public class FacilityDTO implements Validator {
     private int id;
@@ -212,11 +214,35 @@ public class FacilityDTO implements Validator {
         return false;
     }
 
+
+
+    public void checkDuplicate(List<Facility> listFacility, FacilityDTO facilityDTO, Errors errors) {
+        if (facilityDTO.getName().equals("")) {
+            errors.rejectValue("name", "name", "Tên dịch vụ không được để trống");
+        } else {
+            for (int i = 0; i < listFacility.size(); i++) {
+                if (facilityDTO.getName().equals(listFacility.get(i).getName())) {
+                    errors.rejectValue("name", "name", "Tên dịch vụ đã tồn tại");
+                    break;
+                }
+            }
+        }
+        if (facilityDTO.getArea() <= 0) {
+            errors.rejectValue("area", "area", "Diện tích phải lớn hơn 0");
+        }
+        if (facilityDTO.getCost() <= 0) {
+            errors.rejectValue("cost", "cost", "Chi phí thuê phải lớn hơn 0");
+        }
+        if (facilityDTO.getMaxPeople() <= 0) {
+            errors.rejectValue("maxPeople", "maxPeople", "Số người tối đa phải lớn hơn 0");
+        }
+    }
+
     @Override
     public void validate(Object target, Errors errors) {
         FacilityDTO facilityDTO = (FacilityDTO) target;
-        if (facilityDTO.getName().equals("")){
-            errors.rejectValue("name","name","Tên dịch vụ không được để trống");
+        if (facilityDTO.getName().equals("")) {
+            errors.rejectValue("name", "name", "Tên dịch vụ không được để trống");
         }
 
         if (facilityDTO.getArea() <= 0) {
