@@ -154,7 +154,6 @@ public class CustomerDTO implements Validator {
         }
     }
 
-
     public void checkDuplicate(List<Customer> listCustomer, CustomerDTO customerDto, Errors errors) {
 
         if (customerDto.getName().matches("")) {
